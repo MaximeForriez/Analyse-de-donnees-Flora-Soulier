@@ -107,16 +107,21 @@ for colonne in colonnes_quanti:
 
 # Question 9 & 10
 
-csv_path = "data/island-index.csv"
+csv_path = "./data/island-index.csv"
 with open(csv_path, "r", encoding="utf-8") as fichier2:
-    df = pd.read_csv(fichier2)
+    contenu = pd.read_csv(fichier2)
+
+ile = pd.DataFrame(contenu)
 
 # vérification nom des colonnes
-print(df.head())
-print (df.columns.tolist())
+print(contenu.head())
+print (contenu.columns.tolist())
 
 # catégorisation & dénombrement
-surface = df["Surface (km²)"]
+surface = ile["Surface (km²)"]
+
+print(surface)
+
 bornes = [0, 10, 25, 50, 100, 2500, 5000, 10000, float('inf')]
 intervalles = [
     "0-10",
@@ -129,8 +134,8 @@ intervalles = [
     "10000+"
 ]
 categories = pd.cut(surface, bins=bornes, labels=intervalles, right=True, include_lowest=True)
-df["Categorie_de_surface"] = categories
-compte_categories = df["Categorie_de_surface"].value_counts().sort_index()
+contenu["Categorie_de_surface"] = categories
+compte_categories = contenu["Categorie_de_surface"].value_counts().sort_index()
 print("nombre d'îles par catégorie de surface :")
 print(compte_categories)
 
