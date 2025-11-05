@@ -139,6 +139,37 @@ compte_categories = contenu["Categorie_de_surface"].value_counts().sort_index()
 print("nombre d'îles par catégorie de surface :")
 print(compte_categories)
 
+# organigramme
+organigramme = """
+1. Lire CSV et le renommer (fichier2) pour éviter les confusions
+    |
+    |
+
+2. créer le Data Frame ile à partir du contenu
+    |
+    |
+
+3. vérifier les noms des colonnes
+    |
+    |
+
+4. Sélectionner la colonne "Surface (km²)"
+    |
+    |
+
+5. Catégoriser les îles par surface 
+    |
+    |
+
+6. Dénombrer les îles par catégorie de surface
+    |
+    |
+    
+7. Afficher le résultat
+"""
+print(organigramme)
+
+
 
 
 
