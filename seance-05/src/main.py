@@ -4,6 +4,7 @@ import pandas as pd
 import math
 import scipy
 import scipy.stats
+import numpy as np
 
 #C'est la partie la plus importante dans l'analyse de données. D'une part, elle n'est pas simple à comprendre tant mathématiquement que pratiquement. D'autre, elle constitue une application des probabilités. L'idée consiste à comparer une distribution de probabilité (théorique) avec des observations concrètes. De fait, il faut bien connaître les distributions vues dans la séance précédente afin de bien pratiquer cette comparaison. Les probabilités permettent de définir une probabilité critique à partir de laquelle les résultats ne sont pas conformes à la théorie probabiliste.
 #Il n'est pas facile de proposer des analyses de données uniquement dans un cadre univarié. Vous utiliserez la statistique inférentielle principalement dans le cadre d'analyses multivariées. La statistique univariée est une statistique descriptive. Bien que les tests y soient possibles, comprendre leur intérêt et leur puissance d'analyse dans un tel cadre peut être déroutant.
@@ -39,9 +40,10 @@ moyenne_sans_opinion = round(df["Sans opinion"].astype(float).mean(), 0)
 print("moyenne_sans_opinion")
 print(moyenne_sans_opinion)
 
-#calcul des fréquences
+#calcul des fréquences échantillon
+moyennes = donnees.mean().round(0)
 somme_moyennes= moyennes.sum()
-frequences = moyennes / somme_moyennes
+frequences = moyennes / somme_moyennes.round(2)
 
 print("Moyennes des colonnes :")
 print(moyennes)
@@ -49,16 +51,36 @@ print("\nSomme des moyennes :", somme_moyennes)
 print("\nFréquences (échantillon) :")
 print(frequences)
 
-population = pd.DataFrame(ouvrirUnFichier("./data/Echantillonnage-Population-reelle.csv"))
+#calcul des fréquences population mère
+moy_pop = pd.DataFrame(ouvrirUnFichier("./data/Echantillonnage-Population-reelle.csv"))
 
-print("Moyennes des colonnes de la pop mère :")
-moyennes_population = population.mean()
-somme_moyennes_pop = moyennes_population.sum()
-frequences_population = moyennes_population / somme_moyennes_pop
-print(moyennes_population)
-print("\nSomme des moyennes pop :", somme_moyennes_pop)
-print("\nFréquences (pop mère) :")
-print(frequences_population)
+pop_pour = 852
+pop_contre = 911
+pop_sans_opinion = 422
+pop_totale = 2185
+
+frequence_pop = pd.Series({
+    "Pour": round(pop_pour / pop_totale, 2),
+    "Contre": round(pop_contre / pop_totale, 2),
+    "Sans Opinion": round(pop_sans_opinion / pop_totale, 2)
+})
+print(frequence_pop)
+#intervalle de fluctuation
+
+n = len(donnees)
+p = frequence_pop
+zc = 1.96
+intervalle_fluctuation = {}
+
+for cat, p in frequences.items():
+    sigma = np.sqrt(p * (1 - p) / n)
+    IF_inf = p - 1.96 * sigma
+    IF_sup = p + 1.96 * sigma
+    intervalle_fluctuation[cat] = (IF_inf, IF_sup)
+
+print("intervalles de fluctuation à 95%):")
+for cat, (IF_inf, IF_sup) in intervalle_fluctuation.items():
+    print(f"{cat} : [{IF_inf}, {IF_sup}]")
 
 
 #Théorie de l'estimation (intervalles de confiance)
