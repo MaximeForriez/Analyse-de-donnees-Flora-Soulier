@@ -9,7 +9,7 @@ import math
 
 #Fonction pour ouvrir les fichiers
 def ouvrirUnFichier(nom):
-    with open(nom, "r") as fichier:
+    with open(nom, "r", encoding="utf-8") as fichier:
         contenu = pd.read_csv(fichier)
     return contenu
 
@@ -55,6 +55,13 @@ def classementPays(ordre1, ordre2):
 iles = pd.DataFrame(ouvrirUnFichier("./data/island-index.csv"))
 print(iles.head())
 
+#Isoler la colonne des surfaces
+print("étapes pour isoler la colonne des surfaces et ajout:")
+surfaces = list(iles["Surface (km²)"])
+surfaces = [float(x) for x in surfaces]
+
+
+
 #Attention ! Il va falloir utiliser des fonctions natives de Python dans les fonctions locales que je vous propose pour faire l'exercice. Vous devez caster l'objet Pandas en list().
 
 
@@ -65,6 +72,7 @@ print(iles.head())
 #Partie sur les populations des États du monde
 #Source. Depuis 2007, tous les ans jusque 2025, M. Forriez a relevé l'intégralité du nombre d'habitants dans chaque États du monde proposé par un numéro hors-série du monde intitulé États du monde. Vous avez l'évolution de la population et de la densité par année.
 monde = pd.DataFrame(ouvrirUnFichier("./data/Le-Monde-HS-Etats-du-monde-2007-2025.csv"))
+print(monde.head())
 
 #Attention ! Il va falloir utiliser des fonctions natives de Python dans les fonctions locales que je vous propose pour faire l'exercice. Vous devez caster l'objet Pandas en list().
 
