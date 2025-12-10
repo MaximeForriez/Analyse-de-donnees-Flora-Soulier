@@ -53,6 +53,7 @@ def classementPays(ordre1, ordre2):
 
 #Partie sur les îles
 iles = pd.DataFrame(ouvrirUnFichier("./data/island-index.csv"))
+print(iles.head())
 
 #Attention ! Il va falloir utiliser des fonctions natives de Python dans les fonctions locales que je vous propose pour faire l'exercice. Vous devez caster l'objet Pandas en list().
 
