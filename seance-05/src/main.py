@@ -85,9 +85,65 @@ for cat, (IF_inf, IF_sup) in intervalle_fluctuation.items():
 
 #Théorie de l'estimation (intervalles de confiance)
 #L'estimation se base sur l'effectif.
-print("Résultat sur le calcul d'un intervalle de confiance")
+
+premier_echantillon = donnees.iloc[0]
+ligne = list(premier_echantillon.astype(int))
+colonnes = list(donnees.columns)
+print("premier_echantillon")
+for nom, val in zip(colonnes, ligne):
+    print(f"{nom} : {val}")
+
+n = sum(ligne)
+print(f"\nEffectif du premier échantillon : {n}")
+
+frequences = {nom: round(val / n, 2) for nom, val in zip(colonnes, ligne)}
+print("Fréquences du premier échantillon :")
+for nom, freq in frequences.items():
+    print(f"{nom} : {freq}")
+
+#intervalle de confiance
+zc = 1.96
+intervalle_confiance = {}
+for nom, val in zip(colonnes, ligne):
+    p = val / n
+    sigma = math.sqrt((p * (1 - p)) / n)
+    IC_inf = max(0.0, round(p - sigma, 3))
+    IC_sup = min(1.0, round(p + sigma, 3))
+    intervalle_confiance[nom] = (IC_inf, IC_sup)
+
+print("Intervalles de confiance à 95% :")
+for nom, (IC_inf, IC_sup) in intervalle_confiance.items():
+    print(f"{nom} : [{IC_inf}, {IC_sup}]")
 
 #Théorie de la décision (tests d'hypothèse)
 #La décision se base sur la notion de risques alpha et bêta.
 #Comme à la séance précédente, l'ensemble des tests se trouve au lien : https://docs.scipy.org/doc/scipy/reference/stats.html
 print("Théorie de la décision")
+
+from scipy.stats import shapiro
+
+fichier_test_1 = pd.DataFrame(ouvrirUnFichier("./data/Loi-normale-test-1.csv"))
+fichier_test_2 = pd.DataFrame(ouvrirUnFichier("./data/Loi-normale-test-2.csv"))
+
+#test de l'ouverture des fichiers : 
+print (fichier_test_1)
+print (fichier_test_2)
+
+stat1, p_value1 = shapiro(fichier_test_1)
+stat2, p_value2 = shapiro(fichier_test_2)
+
+
+print ("résultat du test de normalité de Shapiro-Wilk pour fichier 1")
+print ("statistique = ", round(stat1, 4), "p-value=", round(p_value1, 6))
+if p_value1 > 0.05:
+        print("Conclusion : Les données suivent une loi normale (on ne rejette pas H0)\n")
+else:
+        print("Conclusion : Les données ne suivent pas une loi normale (on rejette H0)\n")
+
+print ("résultat du test de normalité de Shapiro-Wilk pour fichier 2")
+print ("statistique = ", round(stat2, 4), "p-value=", round(p_value2, 6))
+if p_value2 > 0.05:
+        print("Conclusion : Les données suivent une loi normale (on ne rejette pas H0)\n")
+else:
+        print("Conclusion : Les données ne suivent pas une loi normale (on rejette H0)\n")
+   
